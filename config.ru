@@ -1,2 +1,2 @@
-require './verify-email'
+require 'web'
 run Sinatra::Application
