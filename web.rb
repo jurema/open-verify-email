@@ -1,7 +1,9 @@
 # encoding: utf-8
+
 require 'sinatra'
 require 'net/smtp'
 require 'resolv'
+require 'sinatra/reloader' if development?
 
 get '/' do
   '<form action="/verify" method="post"><input type="text" name="email" /><input type="submit"/></form>'
