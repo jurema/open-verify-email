@@ -30,10 +30,6 @@ post '/verify' do
     response << "invalid email"
   end  
 
-  response.each do |response|
-    response
-  end
-
   erb :verify, :locals => { :response => response }
 end
 
