@@ -6,7 +6,7 @@ require 'resolv'
 require 'sinatra/reloader' if development?
 
 get '/' do
-  '<form action="/verify" method="post"><input type="text" name="email" /><input type="submit"/></form>'
+  erb :index
 end
 
 post '/verify' do
