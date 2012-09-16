@@ -17,15 +17,19 @@ post '/verify' do
     id, host = email.split('@')
     mx = Resolv::DNS.new.getresources(host, Resolv::DNS::Resource::IN::MX).map { |dns| dns.exchange.to_s }
 
-    smtp = Net::SMTP.start(mx[0], 25)
-    response << smtp.helo('verify-email.io').string
-    response << smtp.mailfrom('bot@verify-email.io').string
-    begin
-      response << smtp.rcptto(email).string
-    rescue Net::SMTPFatalError => e
-      response << e.message
+    if mx.empty?
+      response << "No MX records for host: #{host}"
+    else
+      smtp = Net::SMTP.start(mx[0], 25)
+      response << smtp.helo('verify-email.io').string
+      response << smtp.mailfrom('bot@verify-email.io').string
+      begin
+        response << smtp.rcptto(email).string
+      rescue Net::SMTPFatalError => e
+        response << e.message
+      end
+      smtp.finish
     end
-    smtp.finish
   else
     response << "invalid email"
   end  
