@@ -29,14 +29,14 @@ def verify(email)
 
   return "No MX records were found for host: #{host}" if mx.empty?
 
-  smtp = Net::SMTP.start(mx[0], 25)
-  smtp.helo('verify-email.io').string
-  smtp.mailfrom('bot@verify-email.io').string
   begin
+    smtp = Net::SMTP.start(mx[0], 25)
+    smtp.helo('verify-email.io').string
+    smtp.mailfrom('bot@verify-email.io').string
     response = smtp.rcptto(email).string
-  rescue Net::SMTPFatalError => e
-    response = e.message
+    smtp.finish
+  rescue Net::SMTPFatalError
+    response = $!.to_s
   end
-  smtp.finish
   response
 end
