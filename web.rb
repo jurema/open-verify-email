@@ -10,18 +10,16 @@ get '/' do
 end
 
 post '/verify' do
-  email = params[:email]
-
-  response = verify(email)
-
-  erb :verify, :locals => { :response => response }
+  erb :verify, :locals => { :response => verify }
 end
 
 def valid?(email)
   /^[a-zA-Z0-9_.+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-.]+$/ =~ email
 end
 
-def verify(email)
+def verify
+  email = params[:email]
+
   return "Invalid email" unless valid?(email)
 
   id, host = email.split('@')
