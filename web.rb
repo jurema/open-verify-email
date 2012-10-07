@@ -31,10 +31,14 @@ def verify
     smtp = Net::SMTP.start(mx[0], 25)
     smtp.helo('verify-email.io').string
     smtp.mailfrom('bot@verify-email.io').string
-    response = smtp.rcptto(email).string
+    status = smtp.rcptto(email).status
+    res = case status.to_s
+            when "500" then "Sorry, email doesn't exist"
+            when "250" then "Success! Email exists"
+          end
     smtp.finish
   rescue Net::SMTPFatalError
-    response = $!.to_s
+    res = $!.to_s
   end
-  response
+  res
 end
